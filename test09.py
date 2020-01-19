@@ -1,8 +1,10 @@
 '''
 游民星空壁纸简易爬虫
 '''
-import urllib.request
 import os
+
+from gethtml import get_html
+from gethtml import save_image
 
 _path = os.getcwd() + '\\res\\image'
 
@@ -11,23 +13,6 @@ _image_show_url = 'www.gamersky.com/showimage/id_gamersky.shtml?'
 _image_test = 'https://img1.gamersky.com/image2019/11/20191115_lr_red_176_10/'\
 	'gamersky_002origin_003_20191115203786E.jpg'
 	
-
-def get_html(url, has_head_data = True, is_decode = True):
-	'''获取网页内容'''
-	if has_head_data:
-		data = {}
-		head = {}
-		head['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'\
-			' (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36'
-		request = urllib.request.Request(url, data, head)
-	else:
-		request = urllib.request.Request(url)
-	response = urllib.request.urlopen(request)
-	if is_decode:
-		return response.read().decode('utf-8')
-	else:
-		return response.read()
-
 
 def find_image(page_url):
 	'''查找图片链接'''
@@ -40,18 +25,6 @@ def find_image(page_url):
 		addrs.append(html[pos_img_start:pos_img_end])
 		pos_start = html.find(_image_show_url, pos_start+len(_image_show_url))
 	return addrs
-	
-	
-def save_image(folder, img_addrs, page):
-	'''保存图片到文件夹'''
-	index = 0
-	for addr in img_addrs:
-		print(addr)
-		html = get_html(addr, has_head_data = False, is_decode = False)
-		with open(folder+'//' + str(page+1) + '_' + str(index) + '.jpg', 'wb') as imgfile:
-			imgfile.write(html)
-		index += 1
-
 
 def get_page_max(page_url):
 	'''获取最大页面数'''
