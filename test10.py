@@ -1,17 +1,17 @@
 '''
-正则表达式在网页内容查找中的应用
+百度下图
 '''
-import re
-import os
 import urllib.request
+import re
+import requests
+import os
 
-from gethtml import get_html
 from gethtml import save_image
 
+_path = os.getcwd() + '\\res\\image'
 _url = 'https://image.baidu.com/search/index'
-_path = os.getcwd() + '\\res\\image'	
-	
-def get_imgs(keyword,pages):
+
+def getDatas(keyword,pages):
     params=[]
     for i in range(30,30*pages+30,30):
         params.append({
@@ -46,11 +46,25 @@ def get_imgs(keyword,pages):
                       '1526377465547': ''
                   })
     urls = []
+    
     for i in params:
-        data = urllib.request.Request(_url,params=i).json().get('data')
-        urls.append(data.get('thumbURL'))
-        
-    save_image(_path, urls)
-
-
-get_imgs('', 1)
+        datas = requests.get(_url,params=i).json()
+        datas = datas.get('data')
+        for each in datas:
+            addr_img = each.get('thumbURL')
+            if addr_img != None:
+                urls.append(addr_img)
+    return urls
+    
+ 
+def getImg(): 
+    key = input('input search key:\n')
+    pages = input('input page number to download:\n')
+    addrs_img=getDatas(key ,1)   
+    folder = _path + '\\' + key + '_baidu'
+    if not os.path.exists(folder):
+        os.mkdir(folder) 
+    save_image(folder, addrs_img)
+ 
+if __name__ == '__main__':
+    getImg()

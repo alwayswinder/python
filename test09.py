@@ -38,7 +38,6 @@ def download_image(url, folder = 'pachong_test_01'):
 	folder = _path + '\\' + folder
 	if not os.path.exists(folder):
 		os.mkdir(folder)
-		os.chdir(folder)
 	page_max = get_page_max(url)
 	for page in range(page_max):
 		if page == 0:
@@ -59,6 +58,6 @@ def gamersky_imag_auto_download():
 
 
 
-
-gamersky_imag_auto_download()
+if __name__ == '__main__':
+    gamersky_imag_auto_download()
 
